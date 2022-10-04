@@ -23,10 +23,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and push ledger-app-builder to GitHub Packages
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         dockerfile: Dockerfile
-        repository: blooo/ledger-app-builder
+        repository: blooo/ledger-app-builder/ledger-app-builder
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -34,11 +34,11 @@ jobs:
         tags: latest
 
     - name: Build and push ledger-app-scanner to GitHub Packages
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         context: ./coverity/
         dockerfile: ./coverity/Dockerfile
-        repository: blooo/ledger-app-scanner
+        repository: blooo/ledger-app-builder/ledger-app-scanner
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
