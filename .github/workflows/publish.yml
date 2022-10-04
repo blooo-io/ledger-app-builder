@@ -70,6 +70,10 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-scanner
+    - name: Download Coverity Analysis
+      run: |
+        cd coverity/
+        curl -o cov-analysis-linux64.tar.gz https://scan.coverity.com/download/cxx/linux64
 
     - name: Build and push ledger-app-scanner to GitHub Packages
       uses: docker/build-push-action@v3
