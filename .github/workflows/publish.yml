@@ -71,12 +71,6 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-scanner
 
-    - name: Download Coverity Analysis
-      run: |
-        curl -o ./coverity/cov-analysis-linux64.tar.gz https://scan.coverity.com/download/cxx/linux64 \
-        --form project=${{ github.repository }} \
-        --form token=${{ secrets.TOKEN }}
-
     - name: Build and push ledger-app-scanner to GitHub Packages
       uses: docker/build-push-action@v3
       with:
@@ -85,3 +79,4 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         file: ./coverity/Dockerfile
         push: true
+        secrets: REPOSITORY=${{ github.repository }}, TOKEN=${{ secrets.TOKEN }}
