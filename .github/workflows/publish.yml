@@ -46,6 +46,7 @@ jobs:
         file: Dockerfile
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        push: true
 
   build_app_scanner:
     name: Build and push ledger-app-scanner image
@@ -78,3 +79,4 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         file: ./coverity/Dockerfile
+        push: true
