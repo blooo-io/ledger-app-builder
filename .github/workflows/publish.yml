@@ -39,9 +39,43 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-builder
 
     - name: Build and push ledger-app-builder to GitHub Packages
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         context: .
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
         file: Dockerfile
+        tags: latest
+        labels: ${{ steps.meta.outputs.labels }}
+        push: true
+
+  build_app_scanner:
+    name: Build and push ledger-app-scanner image
+    needs: build_app_builder
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-scanner
+
+    - name: Build and push ledger-app-scanner to GitHub Packages
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        tags: latest
+        labels: ${{ steps.meta.outputs.labels }}
+        file: ./coverity/Dockerfile
+        push: true
