@@ -12,7 +12,7 @@ on:
       - Dockerfile
 
 jobs:
-  build:
+  build_app_builder:
     name: Build and push ledger-app-builder image
     runs-on: ubuntu-latest
     permissions:
@@ -21,6 +21,13 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push ledger-app-builder to GitHub Packages
       uses: docker/build-push-action@v2
@@ -32,6 +39,24 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         tag_with_sha: true
         tags: latest
+
+  build_app_scanner:
+    name: Build and push ledger-app-scanner image
+    needs: build_app_builder
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push ledger-app-scanner to GitHub Packages
       uses: docker/build-push-action@v2
