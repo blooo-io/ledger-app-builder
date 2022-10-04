@@ -10,6 +10,9 @@ on:
     paths:
       - .github/workflows/publish.yml
       - Dockerfile
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build_app_builder:
@@ -29,16 +32,19 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-builder
+
     - name: Build and push ledger-app-builder to GitHub Packages
       uses: docker/build-push-action@v2
       with:
-        dockerfile: Dockerfile
-        repository: ${{ github.repository }}/ledger-app-builder
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        tag_with_sha: true
-        tags: latest
+        context: .
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        file: Dockerfile
 
   build_app_scanner:
     name: Build and push ledger-app-scanner image
@@ -58,14 +64,16 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ledger-app-scanner
+
     - name: Build and push ledger-app-scanner to GitHub Packages
       uses: docker/build-push-action@v2
       with:
-        context: ./coverity/
-        dockerfile: ./coverity/Dockerfile
-        repository: ${{ github.repository }}/ledger-app-scanner
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        tag_with_sha: true
-        tags: latest
+        context: .
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        file: ./coverity/Dockerfile
