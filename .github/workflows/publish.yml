@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - master
-      - fix-build-image-ci
     paths:
       - .github/workflows/publish.yml
       - Dockerfile
@@ -44,7 +43,7 @@ jobs:
       with:
         context: .
         file: Dockerfile
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: latest
         labels: ${{ steps.meta.outputs.labels }}
         push: true
 
@@ -76,7 +75,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: latest
         labels: ${{ steps.meta.outputs.labels }}
         file: ./coverity/Dockerfile
         push: true
