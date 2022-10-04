@@ -1,4 +1,4 @@
-FROM ghcr.io/blooo/ledger-app-builder:latest
+FROM ghcr.io/blooo/ledger-app-builder/ledger-app-builder:latest
 
 # Coverity Scan
 ADD cov-analysis-linux64-2022.06.tar.gz /opt/
