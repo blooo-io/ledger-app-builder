@@ -49,7 +49,7 @@ jobs:
 
   build_app_scanner:
     name: Build and push ledger-app-scanner image
-    needs: build_app_builder
+    # needs: build_app_builder
     runs-on: ubuntu-latest
     permissions:
       packages: write
